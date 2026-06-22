@@ -64,8 +64,21 @@ def build_server(session_engine: Engine | None = None) -> FastMCP:
     return mcp
 
 
-def main() -> None:
-    """Console-script entrypoint: run the server over stdio."""
+def main(argv: list[str] | None = None) -> None:
+    """Console-script entrypoint.
+
+    ``tokenslim-mcp``            runs the stdio MCP server (default).
+    ``tokenslim-mcp install ...`` registers the server into agent configs and
+    exits; all flags after ``install`` are handled by :func:`install.main`.
+    """
+    import sys
+
+    args = sys.argv[1:] if argv is None else argv
+    if args and args[0] == "install":
+        from .install import main as install_main
+
+        raise SystemExit(install_main(args[1:]))
+
     build_server().run("stdio")
 
 
