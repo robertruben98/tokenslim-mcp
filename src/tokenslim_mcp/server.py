@@ -65,8 +65,15 @@ def build_server(session_engine: Engine | None = None) -> FastMCP:
 
 
 def main() -> None:
-    """Console-script entrypoint: run the server over stdio."""
-    build_server().run("stdio")
+    """Console-script entrypoint: run the server over stdio or register it."""
+    import sys
+
+    from .install import install_mcp_configs
+
+    if len(sys.argv) > 1 and sys.argv[1] in ("install", "--install"):
+        install_mcp_configs()
+    else:
+        build_server().run("stdio")
 
 
 if __name__ == "__main__":
